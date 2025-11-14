@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Inventory System — Adjust Stock</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory System — Adjust Stock</title>
 
-<script>
+    <script>
   const AUTH_OK   = localStorage.getItem('auth_v1') === 'ok';
   const AUTH_USER = localStorage.getItem('auth_user');
   const AUTH_ROLE = localStorage.getItem('auth_role');
@@ -18,299 +18,717 @@
     localStorage.removeItem('auth_time');
     window.location.replace('login.html');
   }
-</script>
+    </script>
 
-<style>
-  /* ==== Light theme based on #F7F4EA ==== */
-  :root{
-    --nav-w:260px;
+    <style>
+        /* ==== Light theme based on #F7F4EA ==== */
+        :root {
+            --nav-w: 260px;
+            /* Theme */
+            --bg: #F7F4EA; /* paper background */
+            --panel: #EEE6D8; /* cards / panels */
+            --ink: #1F2937; /* primary text */
+            --muted: #6B7280; /* muted text */
+            --line: #D9CFC1; /* borders/outlines */
+            --accent: #0EA5A4; /* teal accent */
+            --chip: #EDE7DA; /* chips/pills */
+        }
 
-    /* Theme */
-    --bg:#F7F4EA;         /* paper background */
-    --panel:#EEE6D8;      /* cards / panels */
-    --ink:#1F2937;        /* primary text */
-    --muted:#6B7280;      /* muted text */
-    --line:#D9CFC1;       /* borders/outlines */
-    --accent:#0EA5A4;     /* teal accent */
-    --chip:#EDE7DA;       /* chips/pills */
-  }
+        html, body {
+            height: 100%
+        }
 
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:var(--bg);
-    color:var(--ink);
-  }
-  h1,h2,h3{color:var(--ink)}
-  .content{padding:20px;padding-top:80px;min-height:100vh;box-sizing:border-box}
+        body {
+            margin: 0;
+            font-family: Arial,sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
 
-  /* Inputs / buttons — legibility fixes */
-  input,button,select,textarea{
-    padding:8px;margin:4px;font-family:inherit;
-    color:var(--ink);
-    background:var(--panel);
-    border:1px solid var(--line);
-    caret-color:var(--ink);
-  }
-  input::placeholder, textarea::placeholder{ color:var(--muted); opacity:1 }
+        h1, h2, h3 {
+            color: var(--ink)
+        }
 
-  button{
-    border-radius:8px;
-    cursor:pointer
-  }
-  button:hover{
-    background:var(--accent);
-    color:#ffffff;
-    border-color:var(--accent)
-  }
+        .content {
+            padding: 20px;
+            padding-top: 80px;
+            min-height: 100vh;
+            box-sizing: border-box
+        }
 
-  /* Sidebar + hamburger */
-  #menu-check{display:none}
-  .hamburger{
-    position:fixed;left:12px;top:12px;width:32px;display:flex;flex-direction:column;gap:7px;
-    cursor:pointer;user-select:none;z-index:1200;transition:transform .3s
-  }
-  .hamburger .bar{
-    height:3px;background:var(--ink);border-radius:10px;
-    transition:transform .35s,opacity .25s,width .35s
-  }
-  .hamburger .bar1,.hamburger .bar3{width:18px}.hamburger .bar2{width:28px}
-  #menu-check:checked+label.hamburger{transform:translateX(var(--nav-w))}
-  #menu-check:checked+label.hamburger .bar1{transform:translateY(10px) rotate(45deg);width:28px}
-  #menu-check:checked+label.hamburger .bar2{opacity:0}
-  #menu-check:checked+label.hamburger .bar3{transform:translateY(-10px) rotate(-45deg);width:28px}
+        /* Inputs / buttons — legibility fixes */
+        input, button, select, textarea {
+            padding: 8px;
+            margin: 4px;
+            font-family: inherit;
+            color: var(--ink);
+            background: var(--panel);
+            border: 1px solid var(--line);
+            caret-color: var(--ink);
+        }
 
-  .sidebar{
-    position:fixed;inset:0 auto 0 0;width:var(--nav-w);
-    background:var(--panel);padding:20px;box-sizing:border-box;
-    transform:translateX(-100%);transition:.3s;z-index:1100;overflow:auto;
-    border-right:1px solid var(--line);
-    box-shadow:0 10px 30px rgba(0,0,0,.08)
-  }
-  .sidebar a,.sidebar button{
-    display:block;width:100%;margin-bottom:10px;padding:10px;text-align:left;
-    border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--line);
-    background:transparent
-  }
-  .sidebar a:hover{background:var(--accent);color:#ffffff;border-color:var(--accent)}
-  #menu-check:checked~.sidebar{transform:translateX(0)}
-  label.overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);opacity:0;visibility:hidden;transition:.3s;z-index:1090}
-  #menu-check:checked~label.overlay{opacity:1;visibility:visible}
+            input::placeholder, textarea::placeholder {
+                color: var(--muted);
+                opacity: 1
+            }
 
-  /* Search row */
-  .search-row{
-    display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 16px
-  }
-  .search-row .search-box{
-    flex:1 1 280px;display:flex;gap:8px;align-items:center
-  }
-  .search-row input[type="search"]{
-    width:100%;height:40px;border:2px solid var(--line);border-top:none;border-bottom:none;
-    background:transparent;box-shadow:7px 7px 0 0 var(--line);padding:10px;box-sizing:border-box
-  }
-  .pill{
-    background:var(--chip);border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:.85em;color:var(--ink)
-  }
+        button {
+            border-radius: 8px;
+            cursor: pointer
+        }
 
-  /* Cards / grid */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
-  .card{
-    --card-bg:var(--panel);--card-text:var(--ink);
-    width:100%;min-height:320px;background:var(--card-bg);border-radius:20px;position:relative;overflow:hidden;
-    transition:.2s ease;box-shadow:0 8px 20px rgba(0,0,0,.06);border:1px solid var(--line);color:var(--card-text);
-    display:flex;flex-direction:column
-  }
-  .card:hover{transform:translateY(-4px)}
+            button:hover {
+                background: var(--accent);
+                color: #ffffff;
+                border-color: var(--accent)
+            }
 
-  .badge-lowok{position:absolute;top:12px;right:12px;padding:.25em .5em;border-radius:999px;font-size:.7em;font-weight:600;border:1px solid transparent}
-  .badge-lowok--low{background:#fee2e2;color:#991b1b;border-color:#fecaca}
-  .badge-lowok--ok{background:#e6f6f2;color:#065f46;border-color:#bdeee1}
+        /* Sidebar + hamburger */
+        #menu-check {
+            display: none
+        }
 
-  .badge-new{position:absolute;top:-10px;right:-10px;background:#e11d48;color:#fff;padding:.35em .55em;border-radius:999px;font-weight:700;font-size:.7em;box-shadow:0 8px 18px rgba(0,0,0,.12);cursor:pointer}
+        .hamburger {
+            position: fixed;
+            left: 12px;
+            top: 12px;
+            width: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            cursor: pointer;
+            user-select: none;
+            z-index: 1200;
+            transition: transform .3s
+        }
 
-  .card__image{
-    width:100%;height:110px;background:#E5DDD0; /* light placeholder */
-    background-size:cover;background-position:center;border-bottom:1px solid var(--line);position:relative
-  }
-  .img-edit-btn,.img-view-btn{
-    border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.75);color:var(--ink)
-  }
-  .img-edit-btn{position:absolute;top:6px;left:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
-  .img-view-btn{position:absolute;top:6px;right:6px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;padding:0 8px;cursor:pointer}
-  .qty-badge{position:absolute;bottom:8px;right:8px;background:#111;color:#fff;font-size:12px;padding:2px 6px;border-radius:999px;opacity:.9}
+            .hamburger .bar {
+                height: 3px;
+                background: var(--ink);
+                border-radius: 10px;
+                transition: transform .35s,opacity .25s,width .35s
+            }
 
-  .card__body{display:flex;flex-direction:column;gap:6px;padding:10px 12px 0 12px;min-height:140px}
-  .card__title{font-size:1.05rem;margin:2px 0 0;font-weight:700}
-  .card__description{color:var(--muted);font-size:.83em;margin:0}
+            .hamburger .bar1, .hamburger .bar3 {
+                width: 18px
+            }
 
-  .card__loclist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-  .card__locitem{display:flex;align-items:center;gap:8px;line-height:1.25}
-  .chip{background:var(--chip);border:1px solid var(--line);padding:2px 8px;border-radius:999px;font-size:.75em;color:var(--ink);white-space:nowrap}
-  .chip--old::before{content:"🏚️ ";}
-  .chip--new::before{content:"🏢 ";}
-  .chip--office::before{content:"🏷️ ";}
+            .hamburger .bar2 {
+                width: 28px
+            }
 
-  .kv{font-size:.86em;color:var(--ink)}
-  .kv .label{color:var(--muted)}
-  .kv .value{font-weight:600}
+        #menu-check:checked + label.hamburger {
+            transform: translateX(var(--nav-w))
+        }
 
-  .card__actions{margin-top:auto;display:flex;justify-content:center;gap:12px;padding:12px 0 14px 0}
-  .card__button{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
-  .card__button:hover{background:var(--accent);color:#ffffff;border-color:var(--accent)}
-  .card__button--trash{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+            #menu-check:checked + label.hamburger .bar1 {
+                transform: translateY(10px) rotate(45deg);
+                width: 28px
+            }
 
-  /* Modals */
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.25);z-index:9999}
-  .modal.open{display:flex}
-  .modal-card{
-    width:95%;max-width:520px;background:var(--panel);border-radius:8px;padding:16px 18px;
-    box-shadow:0 20px 40px rgba(0,0,0,.12);border:1px solid var(--line);color:var(--ink)
-  }
-  .modal-card h3{margin:0 0 10px;color:var(--ink)}
-  .modal-card label{display:block;margin:10px 0 4px;font-size:14px;color:var(--ink)}
+            #menu-check:checked + label.hamburger .bar2 {
+                opacity: 0
+            }
 
-  /* Fancy input styling updated to theme vars */
-  .input-container{position:relative;margin:8px 0}
-  .input{
-    width:100%;padding:10px;height:40px;
-    border:2px solid var(--line);
-    border-top:none;border-bottom:none;
-    font-size:16px;background:transparent;outline:none;
-    box-shadow:7px 7px 0 0 var(--line);
-    transition:.5s;box-sizing:border-box;
-    color:var(--ink);caret-color:var(--ink);
-  }
-  .topline,.underline{position:absolute;background-color:var(--line);height:2px;right:0;transition:.5s}
-  .topline{width:0;top:0}.underline{width:0;bottom:0}
-  .input:focus~.topline{width:35%}.input:focus~.underline{width:100%}
-  .label{position:absolute;top:10px;left:10px;color:var(--ink);transition:.5s;transform:scale(0);z-index:-1;background:var(--bg);padding:0 4px}
-  .input:focus~.label{top:-10px;transform:scale(1)}
+            #menu-check:checked + label.hamburger .bar3 {
+                transform: translateY(-10px) rotate(-45deg);
+                width: 28px
+            }
 
-  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--nav-w);
+            background: var(--panel);
+            padding: 20px;
+            box-sizing: border-box;
+            transform: translateX(-100%);
+            transition: .3s;
+            z-index: 1100;
+            overflow: auto;
+            border-right: 1px solid var(--line);
+            box-shadow: 0 10px 30px rgba(0,0,0,.08)
+        }
 
-  /* Toasts */
-  .toast-wrap{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:10000}
-  .toast{background:#E9E2D6;color:var(--ink);padding:10px 12px;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
-  .toast--warn{background:#F2C97D;color:#4A2E00}.toast--error{background:#F3B8B8;color:#711313}.toast__close{margin-left:12px;cursor:pointer;font-weight:700}
-</style>
+            .sidebar a, .sidebar button {
+                display: block;
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 10px;
+                text-align: left;
+                border-radius: 8px;
+                text-decoration: none;
+                color: inherit;
+                border: 1px solid var(--line);
+                background: transparent
+            }
+
+                .sidebar a:hover {
+                    background: var(--accent);
+                    color: #ffffff;
+                    border-color: var(--accent)
+                }
+
+        #menu-check:checked ~ .sidebar {
+            transform: translateX(0)
+        }
+
+        label.overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.25);
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s;
+            z-index: 1090
+        }
+
+        #menu-check:checked ~ label.overlay {
+            opacity: 1;
+            visibility: visible
+        }
+
+        /* Search row */
+        .search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 8px 0 16px
+        }
+
+            .search-row .search-box {
+                flex: 1 1 280px;
+                display: flex;
+                gap: 8px;
+                align-items: center
+            }
+
+            .search-row input[type="search"] {
+                width: 100%;
+                height: 40px;
+                border: 2px solid var(--line);
+                border-top: none;
+                border-bottom: none;
+                background: transparent;
+                box-shadow: 7px 7px 0 0 var(--line);
+                padding: 10px;
+                box-sizing: border-box
+            }
+
+        .pill {
+            background: var(--chip);
+            border: 1px solid var(--line);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: .85em;
+            color: var(--ink)
+        }
+
+        /* Cards / grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(210px,1fr));
+            gap: 16px
+        }
+
+        .card {
+            --card-bg: var(--panel);
+            --card-text: var(--ink);
+            width: 100%;
+            min-height: 320px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: .2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,.06);
+            border: 1px solid var(--line);
+            color: var(--card-text);
+            display: flex;
+            flex-direction: column
+        }
+
+            .card:hover {
+                transform: translateY(-4px)
+            }
+
+        .badge-lowok {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: .25em .5em;
+            border-radius: 999px;
+            font-size: .7em;
+            font-weight: 600;
+            border: 1px solid transparent
+        }
+
+        .badge-lowok--low {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fecaca
+        }
+
+        .badge-lowok--ok {
+            background: #e6f6f2;
+            color: #065f46;
+            border-color: #bdeee1
+        }
+
+        .badge-new {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #e11d48;
+            color: #fff;
+            padding: .35em .55em;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: .7em;
+            box-shadow: 0 8px 18px rgba(0,0,0,.12);
+            cursor: pointer
+        }
+
+        .card__image {
+            width: 100%;
+            height: 110px;
+            background: #E5DDD0; /* light placeholder */
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid var(--line);
+            position: relative
+        }
+
+        .img-edit-btn, .img-view-btn {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255,255,255,.75);
+            color: var(--ink)
+        }
+
+        .img-edit-btn {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer
+        }
+
+        .img-view-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            padding: 0 8px;
+            cursor: pointer
+        }
+
+        .qty-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: #111;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 999px;
+            opacity: .9
+        }
+
+        .card__body {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 10px 12px 0 12px;
+            min-height: 140px
+        }
+
+        .card__title {
+            font-size: 1.05rem;
+            margin: 2px 0 0;
+            font-weight: 700
+        }
+
+        .card__description {
+            color: var(--muted);
+            font-size: .83em;
+            margin: 0
+        }
+
+        .card__loclist {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .card__locitem {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.25
+        }
+
+        .chip {
+            background: var(--chip);
+            border: 1px solid var(--line);
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: .75em;
+            color: var(--ink);
+            white-space: nowrap
+        }
+
+        .chip--old::before {
+            content: "🏚️ ";
+        }
+
+        .chip--new::before {
+            content: "🏢 ";
+        }
+
+        .chip--office::before {
+            content: "🏷️ ";
+        }
+
+        .kv {
+            font-size: .86em;
+            color: var(--ink)
+        }
+
+            .kv .label {
+                color: var(--muted)
+            }
+
+            .kv .value {
+                font-weight: 600
+            }
+
+        .card__actions {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 0 14px 0
+        }
+
+        .card__button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: .2s;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            color: var(--ink)
+        }
+
+            .card__button:hover {
+                background: var(--accent);
+                color: #ffffff;
+                border-color: var(--accent)
+            }
+
+        .card__button--trash {
+            background: var(--panel);
+            color: var(--ink);
+            border: 1px solid var(--line)
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,.25);
+            z-index: 9999
+        }
+
+            .modal.open {
+                display: flex
+            }
+
+        .modal-card {
+            width: 95%;
+            max-width: 520px;
+            background: var(--panel);
+            border-radius: 8px;
+            padding: 16px 18px;
+            box-shadow: 0 20px 40px rgba(0,0,0,.12);
+            border: 1px solid var(--line);
+            color: var(--ink)
+        }
+
+            .modal-card h3 {
+                margin: 0 0 10px;
+                color: var(--ink)
+            }
+
+            .modal-card label {
+                display: block;
+                margin: 10px 0 4px;
+                font-size: 14px;
+                color: var(--ink)
+            }
+
+        /* Fancy input styling updated to theme vars */
+        .input-container {
+            position: relative;
+            margin: 8px 0
+        }
+
+        .input {
+            width: 100%;
+            padding: 10px;
+            height: 40px;
+            border: 2px solid var(--line);
+            border-top: none;
+            border-bottom: none;
+            font-size: 16px;
+            background: transparent;
+            outline: none;
+            box-shadow: 7px 7px 0 0 var(--line);
+            transition: .5s;
+            box-sizing: border-box;
+            color: var(--ink);
+            caret-color: var(--ink);
+        }
+
+        .topline, .underline {
+            position: absolute;
+            background-color: var(--line);
+            height: 2px;
+            right: 0;
+            transition: .5s
+        }
+
+        .topline {
+            width: 0;
+            top: 0
+        }
+
+        .underline {
+            width: 0;
+            bottom: 0
+        }
+
+        .input:focus ~ .topline {
+            width: 35%
+        }
+
+        .input:focus ~ .underline {
+            width: 100%
+        }
+
+        .label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: var(--ink);
+            transition: .5s;
+            transform: scale(0);
+            z-index: -1;
+            background: var(--bg);
+            padding: 0 4px
+        }
+
+        .input:focus ~ .label {
+            top: -10px;
+            transform: scale(1)
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        /* Toasts */
+        .toast-wrap {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10000
+        }
+
+        .toast {
+            background: #E9E2D6;
+            color: var(--ink);
+            padding: 10px 12px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.12)
+        }
+
+        .toast--warn {
+            background: #F2C97D;
+            color: #4A2E00
+        }
+
+        .toast--error {
+            background: #F3B8B8;
+            color: #711313
+        }
+
+        .toast__close {
+            margin-left: 12px;
+            cursor: pointer;
+            font-weight: 700
+        }
+    </style>
 </head>
 <body>
 
-<input id="menu-check" type="checkbox" />
-<label for="menu-check" class="hamburger" aria-label="Toggle menu" aria-controls="side" role="button" tabindex="0">
-  <span class="bar bar1"></span><span class="bar bar2"></span><span class="bar bar3"></span>
-</label>
+    <input id="menu-check" type="checkbox" />
+    <label for="menu-check" class="hamburger" aria-label="Toggle menu" aria-controls="side" role="button" tabindex="0">
+        <span class="bar bar1"></span><span class="bar bar2"></span><span class="bar bar3"></span>
+    </label>
 
-<nav class="sidebar" id="side" role="navigation" aria-label="Main">
-  <a href="index.html">Add New Stock</a>
-  <a href="adjust.html">Adjust Stock</a>
-  <a href="location.html">Location</a>
-  <a href="goal.html">Set Stock Count Goal</a>
-  <a href="history.html">History</a>
-  <a href="status.html">Status</a>
-  <hr>
-  <button onclick="logout()">Logout</button>
-</nav>
-<label class="overlay" for="menu-check" aria-hidden="true"></label>
+    <nav class="sidebar" id="side" role="navigation" aria-label="Main">
+        <a href="index.html">Add New Stock</a>
+        <a href="adjust.html">Adjust Stock</a>
+        <a href="location.html">Location</a>
+        <a href="goal.html">Set Stock Count Goal</a>
+        <a href="history.html">History</a>
+        <a href="status.html">Status</a>
+        <hr>
+        <button onclick="logout()">Logout</button>
+    </nav>
+    <label class="overlay" for="menu-check" aria-hidden="true"></label>
 
-<div class="toast-wrap" id="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+    <div class="toast-wrap" id="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
-<main class="content">
-  <section aria-labelledby="adjustPageTitle">
-    <h2 id="adjustPageTitle">Adjust Stock</h2>
+    <main class="content">
+        <section aria-labelledby="adjustPageTitle">
+            <h2 id="adjustPageTitle">Adjust Stock</h2>
 
-    <!-- NEW: Search bar -->
-    <form class="search-row" role="search" aria-label="Search items" onsubmit="return false;">
-      <div class="search-box">
-        <label for="searchInput" class="visually-hidden" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden">Search items</label>
-        <input id="searchInput" type="search" placeholder="Search items by name (press / to focus)" autocomplete="off" />
-        <button id="clearSearchBtn" type="button" aria-label="Clear search">Clear</button>
-      </div>
-      <div class="pill" id="resultCount" aria-live="polite">0 items</div>
-    </form>
+            <!-- NEW: Search bar -->
+            <form class="search-row" role="search" aria-label="Search items" onsubmit="return false;">
+                <div class="search-box">
+                    <label for="searchInput" class="visually-hidden" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden">Search items</label>
+                    <input id="searchInput" type="search" placeholder="Search items by name (press / to focus)" autocomplete="off" />
+                    <button id="clearSearchBtn" type="button" aria-label="Clear search">Clear</button>
+                </div>
+                <div class="pill" id="resultCount" aria-live="polite">0 items</div>
+            </form>
 
-    <div id="stockGrid" class="grid"></div>
-    <p id="noResults" style="display:none;color:var(--muted);margin-top:8px">No items match your search.</p>
-  </section>
-</main>
+            <div id="stockGrid" class="grid"></div>
+            <p id="noResults" style="display:none;color:var(--muted);margin-top:8px">No items match your search.</p>
+        </section>
+    </main>
 
-<!-- Adjust dialog -->
-<div id="adjustModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="adj-title">
-  <div class="modal-card">
-    <h3 id="adj-title">Adjust Stock</h3>
-    <div id="adj-subtitle" style="color:var(--muted)"></div>
+    <!-- Adjust dialog -->
+    <div id="adjustModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="adj-title">
+        <div class="modal-card">
+            <h3 id="adj-title">Adjust Stock</h3>
+            <div id="adj-subtitle" style="color:var(--muted)"></div>
 
-    <label for="adj-amount">Amount</label>
-    <input id="adj-amount" type="number" min="1" step="1" value="1" placeholder="Enter amount" inputmode="numeric" class="input">
+            <label for="adj-amount">Amount</label>
+            <input id="adj-amount" type="number" min="1" step="1" value="1" placeholder="Enter amount" inputmode="numeric" class="input">
 
-    <label for="adj-location">Location</label>
-    <select id="adj-location" class="input">
-      <option>Old warehouse</option>
-      <option>New warehouse</option>
-      <option>Office</option>
-    </select>
+            <label for="adj-location">Location</label>
+            <select id="adj-location" class="input">
+                <option>Old warehouse</option>
+                <option>New warehouse</option>
+                <option>Office</option>
+            </select>
 
-    <!-- Account = auto-filled from signed-in user, read-only -->
-    <label for="adj-account">Account</label>
-    <input id="adj-account" type="text" class="input" placeholder="Auto-filled" readonly aria-readonly="true">
+            <!-- Account = auto-filled from signed-in user, read-only -->
+            <label for="adj-account">Account</label>
+            <input id="adj-account" type="text" class="input" placeholder="Auto-filled" readonly aria-readonly="true">
 
-    <label for="adj-purpose">Purpose</label>
-    <input id="adj-purpose" type="text" class="input" placeholder="Enter purpose">
+            <label for="adj-purpose">Purpose</label>
+            <input id="adj-purpose" type="text" class="input" placeholder="Enter purpose">
 
-    <label for="adj-takenby">Taken by</label>
-    <input id="adj-takenby" type="text" class="input" placeholder="Who took it">
+            <label for="adj-takenby">Taken by</label>
+            <input id="adj-takenby" type="text" class="input" placeholder="Who took it">
 
-    <div class="modal-actions">
-      <button id="adj-cancel">Cancel</button>
-      <button id="adj-confirm">Confirm</button>
+            <div class="modal-actions">
+                <button id="adj-cancel">Cancel</button>
+                <button id="adj-confirm">Confirm</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- Delete dialog -->
-<div id="deleteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="del-title">
-  <div class="modal-card">
-    <h3 id="del-title">Delete Item</h3>
-    <div id="del-subtitle" style="color:var(--muted)"></div>
-    <div class="input-container">
-      <input id="del-name" type="text" class="input" placeholder=" " readonly>
-      <span class="topline"></span><span class="underline"></span>
-      <label for="del-name" class="label">Your name (auto)</label>
+    <!-- Delete dialog -->
+    <div id="deleteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="del-title">
+        <div class="modal-card">
+            <h3 id="del-title">Delete Item</h3>
+            <div id="del-subtitle" style="color:var(--muted)"></div>
+            <div class="input-container">
+                <input id="del-name" type="text" class="input" placeholder=" " readonly>
+                <span class="topline"></span><span class="underline"></span>
+                <label for="del-name" class="label">Your name (auto)</label>
+            </div>
+            <div class="input-container">
+                <input id="del-reason" type="text" class="input" placeholder=" ">
+                <span class="topline"></span><span class="underline"></span>
+                <label for="del-reason" class="label">Reason (e.g., discontinued)</label>
+            </div>
+            <div class="input-container">
+                <input id="del-by" type="text" class="input" placeholder=" ">
+                <span class="topline"></span><span class="underline"></span>
+                <label for="del-by" class="label">Adjusted by (name)</label>
+            </div>
+            <div class="modal-actions">
+                <button id="del-cancel">Cancel</button>
+                <button id="del-confirm">Delete</button>
+            </div>
+        </div>
     </div>
-    <div class="input-container">
-      <input id="del-reason" type="text" class="input" placeholder=" ">
-      <span class="topline"></span><span class="underline"></span>
-      <label for="del-reason" class="label">Reason (e.g., discontinued)</label>
-    </div>
-    <div class="input-container">
-      <input id="del-by" type="text" class="input" placeholder=" ">
-      <span class="topline"></span><span class="underline"></span>
-      <label for="del-by" class="label">Adjusted by (name)</label>
-    </div>
-    <div class="modal-actions">
-      <button id="del-cancel">Cancel</button>
-      <button id="del-confirm">Delete</button>
-    </div>
-  </div>
-</div>
 
-<!-- Image viewer modal -->
-<div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="img-title">
-  <div class="modal-card">
-    <h3 id="img-title">Image</h3>
-    <img id="img-view" src="" alt="" style="width:100%; max-height:70vh; object-fit:contain; border:1px solid var(--line); border-radius:8px;" />
-    <div class="modal-actions">
-      <a id="img-open" href="#" target="_blank" rel="noopener" style="margin-right:auto;color:var(--ink);text-decoration:underline">Open in new tab</a>
-      <button id="img-close">Close</button>
+    <!-- NEW: Rename dialog -->
+    <div id="renameModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="rename-title">
+        <div class="modal-card">
+            <h3 id="rename-title">Rename Item</h3>
+            <div id="rename-subtitle" style="color:var(--muted)"></div>
+
+            <label for="rename-name">New name</label>
+            <input id="rename-name" type="text" class="input" placeholder="Enter new item name">
+
+            <div class="modal-actions">
+                <button id="rename-cancel">Cancel</button>
+                <button id="rename-confirm">Save</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- Hidden file picker -->
-<input type="file" id="hiddenFileInput" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.heic,.heif" capture="environment" style="display:none" />
+    <!-- Image viewer modal -->
+    <div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="img-title">
+        <div class="modal-card">
+            <h3 id="img-title">Image</h3>
+            <img id="img-view" src="" alt="" style="width:100%; max-height:70vh; object-fit:contain; border:1px solid var(--line); border-radius:8px;" />
+            <div class="modal-actions">
+                <a id="img-open" href="#" target="_blank" rel="noopener" style="margin-right:auto;color:var(--ink);text-decoration:underline">Open in new tab</a>
+                <button id="img-close">Close</button>
+            </div>
+        </div>
+    </div>
 
-<script type="module">
+    <!-- Hidden file picker -->
+    <input type="file" id="hiddenFileInput" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.heic,.heif" capture="environment" style="display:none" />
+
+    <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
   import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
@@ -483,6 +901,7 @@
           <div class="card__actions">
             <div class="card__button" data-plus aria-label="Add" title="Add (Shift=Set image)">+</div>
             <div class="card__button" data-minus aria-label="Minus" title="Minus">–</div>
+            <div class="card__button" data-rename aria-label="Rename" title="Rename item">✏️</div>
             <div class="card__button card__button--trash" data-del-id="${item.id}" aria-label="Delete" title="Delete">🗑</div>
           </div>
         </div>
@@ -495,8 +914,17 @@
         openImageViewer(withCacheBuster(current.img), `Item: ${current.name}`);
       });
       if (item.isNew) card.querySelector('.badge-new')?.addEventListener('click', async ()=>{ try{ await updateDoc(doc(db,"inventory", item.id), { isNew:false }); }catch(e){} });
-      card.querySelector('[data-plus]').addEventListener('click', (e)=>{ if (e.shiftKey){ openImagePickerById(item.id); return; } openAdjustDialogById(item.id,'add'); });
+
+      // Existing behaviour: + / - only adjust stock
+      card.querySelector('[data-plus]').addEventListener('click', (e)=>{
+        if (e.shiftKey){ openImagePickerById(item.id); return; }
+        openAdjustDialogById(item.id,'add');
+      });
       card.querySelector('[data-minus]').addEventListener('click', ()=> openAdjustDialogById(item.id,'sub'));
+
+      // NEW: rename button
+      card.querySelector('[data-rename]').addEventListener('click', ()=> openRenameDialogById(item.id));
+
       card.querySelector('[data-del-id]').addEventListener('click', ()=> openDeleteDialogById(item.id));
 
       grid.appendChild(card);
@@ -655,6 +1083,78 @@
     pendingDeleteId = null; closeDeleteDialog();
   });
 
+  /* NEW: Rename item */
+  let pendingRenameId = null;
+
+  function openRenameDialogById(id){
+    const item = inventory.find(i => i.id === id);
+    if (!item) return;
+
+    pendingRenameId = id;
+
+    document.getElementById('rename-title').textContent = `Rename "${item.name}"`;
+    document.getElementById('rename-subtitle').textContent =
+      'Change the name of this item. This does not affect stock counts.';
+
+    const nameInput = document.getElementById('rename-name');
+    nameInput.value = item.name || '';
+
+    document.getElementById('renameModal').classList.add('open');
+    setTimeout(() => nameInput.focus(), 0);
+  }
+  window.openRenameDialogById = openRenameDialogById;
+
+  function closeRenameDialog(){
+    document.getElementById('renameModal').classList.remove('open');
+    pendingRenameId = null;
+  }
+
+  document.getElementById('rename-cancel').addEventListener('click', closeRenameDialog);
+
+  document.getElementById('renameModal').addEventListener('click', (e)=>{
+    if (e.target.id === 'renameModal') closeRenameDialog();
+  });
+
+  // Enter key inside rename modal triggers Save
+  document.getElementById('renameModal').addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      document.getElementById('rename-confirm').click();
+    }
+  });
+
+  document.getElementById('rename-confirm').addEventListener('click', async () => {
+    if (!pendingRenameId) { closeRenameDialog(); return; }
+
+    const newName = (document.getElementById('rename-name').value || '').trim();
+    if (!newName){
+      notify('Name cannot be empty.','warn');
+      return;
+    }
+
+    const item = inventory.find(i => i.id === pendingRenameId);
+    if (!item){
+      closeRenameDialog();
+      return;
+    }
+
+    if (newName === item.name){
+      notify('Name is unchanged.','warn');
+      closeRenameDialog();
+      return;
+    }
+
+    try{
+      await updateDoc(doc(db,"inventory", pendingRenameId), { name: newName });
+      notify(`Renamed item to "${newName}".`);
+    }catch(err){
+      console.error(err);
+      notify('Failed to rename item.','error');
+    }
+
+    closeRenameDialog();
+  });
+
   /* Image picker */
   let imgTargetIndex=null;
   const fileInput=document.getElementById('hiddenFileInput');
@@ -700,11 +1200,13 @@
     if (e.key === 'Escape'){
       document.getElementById('adjustModal').classList.remove('open');
       document.getElementById('deleteModal').classList.remove('open');
+      document.getElementById('renameModal').classList.remove('open');
       document.getElementById('imageModal').classList.remove('open');
     }
   });
-</script>
+    </script>
 </body>
 </html>
+
 
 
