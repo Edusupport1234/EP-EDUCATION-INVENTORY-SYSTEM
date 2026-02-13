@@ -144,6 +144,12 @@
 
   /* Helper card (themed) */
   .helper-row{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px}
+  @media (min-width: 600px) {
+    .helper-row{grid-template-columns:1fr 1fr}
+  }
+  @media (min-width: 900px) {
+    .helper-row{grid-template-columns:1fr 1fr 1fr}
+  }
   .card.helper{
     width:100%;border-radius:15px;background:var(--helper-panel);color:var(--ink);padding:16px;
     box-shadow:0 8px 22px rgba(0,0,0,.08);border:1px solid var(--line)
@@ -161,6 +167,284 @@
   }
   .card.helper button:hover{filter:brightness(.95)}
   .helper-note{text-align:center;font-size:12px;color:var(--muted);margin-top:4px}
+
+  /* Barcode Scanner Buttons */
+  .scanner-btn{
+    background:var(--helper-accent);
+    border-color:var(--helper-accent);
+    color:#fff;
+    font-size:20px;
+    padding:10px 16px;
+    min-width:50px;
+  }
+  .scanner-btn:hover{
+    filter:brightness(.9);
+  }
+  .scanner-btn.secondary{
+    background:#0EA5A4;
+    border-color:#0EA5A4;
+  }
+
+  /* Scanner Modal */
+  .scanner-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .scanner-modal.active{display:flex}
+  .scanner-content{
+    background:var(--panel);
+    border-radius:12px;
+    padding:20px;
+    max-width:600px;
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .scanner-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+  }
+  .scanner-header h3{margin:0}
+  .scanner-close{
+    background:transparent;
+    border:none;
+    font-size:28px;
+    cursor:pointer;
+    padding:0;
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--ink);
+  }
+  .scanner-close:hover{
+    background:var(--line);
+    border-radius:50%;
+  }
+  #reader, #quickReader{
+    border:2px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    background:#000;
+  }
+  .scanner-result{
+    margin-top:12px;
+    padding:12px;
+    background:var(--bg);
+    border-radius:8px;
+    border:1px solid var(--accent);
+    display:none;
+  }
+  .scanner-result.active{display:block}
+  .scanner-result strong{color:var(--accent)}
+
+  /* Product Selection Modal */
+  .product-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    z-index:2100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .product-modal.active{display:flex}
+  .product-content{
+    background:var(--panel);
+    border-radius:12px;
+    padding:24px;
+    max-width:500px;
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .product-header{
+    margin-bottom:20px;
+  }
+  .product-header h3{margin:0 0 8px 0}
+  .serial-display{
+    background:var(--bg);
+    padding:12px;
+    border-radius:8px;
+    border:2px solid var(--accent);
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .serial-display .serial-label{
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .serial-display .serial-number{
+    font-size:20px;
+    font-weight:bold;
+    color:var(--accent);
+    font-family:monospace;
+  }
+  .product-list{
+    max-height:300px;
+    overflow-y:auto;
+    margin-bottom:16px;
+  }
+  .product-item{
+    padding:12px;
+    margin-bottom:8px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    border-radius:8px;
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .product-item:hover{
+    border-color:var(--accent);
+    background:var(--chip);
+  }
+  .product-item.selected{
+    border-color:var(--accent);
+    background:var(--chip);
+  }
+  .product-name{
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .product-info{
+    font-size:12px;
+    color:var(--muted);
+  }
+  .product-actions{
+    display:flex;
+    gap:12px;
+  }
+  .product-actions button{
+    flex:1;
+    padding:12px;
+  }
+  .btn-cancel{
+    background:transparent;
+    border:2px solid var(--line);
+  }
+  .btn-cancel:hover{
+    background:var(--line);
+    color:var(--ink);
+  }
+  .btn-confirm{
+    background:var(--accent);
+    border:2px solid var(--accent);
+    color:#fff;
+  }
+  .btn-confirm:hover{
+    filter:brightness(.9);
+  }
+  .btn-confirm:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+  }
+
+  /* Quick Scan Modal */
+  .quick-scan-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    z-index:2100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .quick-scan-modal.active{display:flex}
+  .quick-scan-content{
+    background:var(--panel);
+    border-radius:12px;
+    padding:24px;
+    max-width:500px;
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .quick-scan-header{
+    margin-bottom:20px;
+    text-align:center;
+  }
+  .quick-scan-header h3{margin:0 0 12px 0}
+  .product-found{
+    background:var(--bg);
+    padding:16px;
+    border-radius:8px;
+    border:2px solid var(--accent);
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .product-found .found-label{
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .product-found .found-name{
+    font-size:22px;
+    font-weight:bold;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  .product-found .found-barcode{
+    font-size:14px;
+    color:var(--muted);
+    font-family:monospace;
+  }
+  .quick-controls{
+    display:grid;
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .control-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    align-items:center;
+  }
+  .qty-control{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .qty-btn{
+    width:40px;
+    height:40px;
+    font-size:20px;
+    font-weight:bold;
+    padding:0;
+    border-radius:8px;
+  }
+  .qty-display{
+    flex:1;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    padding:8px;
+    background:var(--bg);
+    border-radius:8px;
+    border:2px solid var(--line);
+  }
+  .action-toggle{
+    display:flex;
+    gap:8px;
+  }
+  .action-toggle button{
+    flex:1;
+    padding:12px;
+    font-weight:600;
+  }
+  .action-toggle button.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+  }
 
   /* Toasts */
   .toast-wrap{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:10000}
@@ -199,10 +483,105 @@
 <!-- Toast container -->
 <div class="toast-wrap" id="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
+<!-- Register Barcode Scanner Modal -->
+<div class="scanner-modal" id="registerScannerModal">
+  <div class="scanner-content">
+    <div class="scanner-header">
+      <h3>Register Barcode to Product</h3>
+      <button class="scanner-close" onclick="closeRegisterScanner()" aria-label="Close scanner">×</button>
+    </div>
+    <div id="reader"></div>
+    <div class="scanner-result" id="registerScannerResult">
+      <strong>Scanned:</strong> <span id="registerScannedCode"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Product Selection Modal (for registering barcode) -->
+<div class="product-modal" id="productModal">
+  <div class="product-content">
+    <div class="product-header">
+      <h3>Select Product for Barcode</h3>
+      <div class="serial-display">
+        <div class="serial-label">Barcode Number</div>
+        <div class="serial-number" id="modalBarcodeNumber">—</div>
+      </div>
+    </div>
+    <div class="product-list" id="productList">
+      <!-- Products will be populated here -->
+    </div>
+    <div class="product-actions">
+      <button class="btn-cancel" onclick="closeProductModal()">Cancel</button>
+      <button class="btn-confirm" id="confirmProductBtn" onclick="confirmProductBarcode()" disabled>Register</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Scan Scanner Modal -->
+<div class="scanner-modal" id="quickScannerModal">
+  <div class="scanner-content">
+    <div class="scanner-header">
+      <h3>Quick Scan - Add/Subtract Stock</h3>
+      <button class="scanner-close" onclick="closeQuickScanner()" aria-label="Close scanner">×</button>
+    </div>
+    <div id="quickReader"></div>
+    <div class="scanner-result" id="quickScannerResult">
+      <strong>Scanned:</strong> <span id="quickScannedCode"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Scan Action Modal -->
+<div class="quick-scan-modal" id="quickActionModal">
+  <div class="quick-scan-content">
+    <div class="quick-scan-header">
+      <h3>Adjust Stock</h3>
+      <div class="product-found" id="productFound">
+        <div class="found-label">Product</div>
+        <div class="found-name" id="foundProductName">—</div>
+        <div class="found-barcode" id="foundBarcode">—</div>
+      </div>
+    </div>
+    
+    <div class="quick-controls">
+      <div class="control-row">
+        <label style="font-weight:600">Action:</label>
+        <div class="action-toggle">
+          <button id="addBtn" class="active" onclick="setAction('add')">Add</button>
+          <button id="subtractBtn" onclick="setAction('subtract')">Subtract</button>
+        </div>
+      </div>
+      
+      <div class="control-row" style="grid-template-columns:1fr">
+        <label style="font-weight:600">Quantity:</label>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-display" id="qtyDisplay">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      
+      <div class="control-row" style="grid-template-columns:1fr">
+        <label style="font-weight:600">Location:</label>
+        <select id="quickLocation" style="width:100%;height:44px;padding:10px">
+          <option>Old warehouse</option>
+          <option>New warehouse</option>
+          <option>Office</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="product-actions">
+      <button class="btn-cancel" onclick="closeQuickActionModal()">Cancel</button>
+      <button class="btn-confirm" onclick="executeQuickAction()">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <main class="content">
   <section aria-labelledby="addPageTitle">
     <h2 id="addPageTitle">Add New Item</h2>
-    <div class="add-row" style="display:grid;grid-template-columns:minmax(260px,1fr) 160px minmax(220px,1fr) auto;gap:12px;align-items:center;max-width:900px">
+    <div class="add-row" style="display:grid;grid-template-columns:minmax(260px,1fr) 160px minmax(220px,1fr) auto auto auto;gap:12px;align-items:center;max-width:1100px">
       <div class="input-container">
         <input type="text" id="newItemName" class="input" placeholder=" " autocomplete="off" />
         <span class="topline"></span><span class="underline"></span>
@@ -218,17 +597,37 @@
         <span class="topline"></span><span class="underline"></span>
         <label for="newItemLoc" class="label">Location</label>
       </div>
+      <button class="scanner-btn" onclick="openRegisterScanner()" aria-label="Register Barcode" title="Register Barcode">🔖</button>
+      <button class="scanner-btn secondary" onclick="openQuickScanner()" aria-label="Quick Scan" title="Quick Scan">⚡</button>
       <button onclick="addNewItem()" aria-label="Add Item">Add Item</button>
     </div>
 
     <div class="helper-row">
+      <div class="card helper" aria-label="Register Barcode Helper">
+        <div class="card-border-top"></div>
+        <div class="img">🔖</div>
+        <span>Register Barcode</span>
+        <span class="job">Scan a barcode and assign it to a product (e.g., one barcode for mBot2, another for AI Camera). Use this to set up product barcodes.</span>
+        <button type="button" onclick="openRegisterScanner()">Register Barcode</button>
+        <div class="helper-note">Tip: Each product can have multiple barcodes.</div>
+      </div>
+      
+      <div class="card helper" aria-label="Quick Scan Helper">
+        <div class="card-border-top"></div>
+        <div class="img">⚡</div>
+        <span>Quick Scan Stock</span>
+        <span class="job">Scan a registered barcode to quickly add or subtract stock. Choose quantity, action (add/subtract), and location. Perfect for fast inventory updates!</span>
+        <button type="button" onclick="openQuickScanner()">Quick Scan</button>
+        <div class="helper-note">Tip: Barcode must be registered first.</div>
+      </div>
+      
       <div class="card helper" aria-label="Image Helper">
         <div class="card-border-top"></div>
         <div class="img">🖼️</div>
         <span>Need an image URL?</span>
         <span class="job">Upload to ImageKit, copy the link, then set it via the 🖼 button on an item.</span>
         <button type="button" onclick="openImgbb()">Open ImageKit</button>
-        <div class="helper-note">Tip: choose “Direct link” if available.</div>
+        <div class="helper-note">Tip: choose "Direct link" if available.</div>
       </div>
     </div>
 
@@ -236,12 +635,27 @@
   </section>
 </main>
 
+<!-- HTML5 QR Code Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
 <!-- Firebase + App Logic -->
 <script type="module">
+  // Global error handler to prevent blank pages
+  window.addEventListener('error', function(e) {
+    console.error('Global error caught:', e.error);
+    // Don't let errors break the page
+    e.preventDefault();
+  });
+
+  window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled promise rejection:', e.reason);
+    e.preventDefault();
+  });
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
   import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-  import { getFirestore, collection, doc, addDoc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+  import { getFirestore, collection, doc, addDoc, updateDoc, onSnapshot, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAL_C_bGiD-G_2g1jro7-OzxIlM0akRdTY",
@@ -295,14 +709,323 @@
   /* Firestore refs */
   const colInventory = collection(db, "inventory");
 
-  /* Keep a local copy of inventory so addNewItem can merge quantities if item exists */
+  /* Keep a local copy of inventory */
   let inventory = [];
   onSnapshot(colInventory, (snap) => { inventory = snap.docs.map(d => ({ id:d.id, ...d.data() })); });
 
   /* Open ImageKit */
   window.openImgbb = () => window.open('https://imagekit.io/dashboard/media-library/L0VQRURVIElOVkVOVE9SWSA', '_blank', 'noopener');
 
-  /* Add item (supports Office) */
+  /* ============================================ */
+  /* FUNCTION 1: REGISTER BARCODE TO PRODUCT     */
+  /* ============================================ */
+  
+  let registerHtml5QrCode = null;
+  let registerScannerActive = false;
+  let scannedBarcode = null;
+  let selectedProductId = null;
+
+  window.openRegisterScanner = async function() {
+    const modal = document.getElementById('registerScannerModal');
+    const resultDiv = document.getElementById('registerScannerResult');
+    
+    modal.classList.add('active');
+    resultDiv.classList.remove('active');
+    
+    if (!registerHtml5QrCode) {
+      registerHtml5QrCode = new Html5Qrcode("reader");
+    }
+
+    if (registerScannerActive) return;
+
+    try {
+      await registerHtml5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+        (decodedText, decodedResult) => {
+          document.getElementById('registerScannedCode').textContent = decodedText;
+          document.getElementById('registerScannerResult').classList.add('active');
+          scannedBarcode = decodedText;
+          notify(`Barcode scanned: ${decodedText}`);
+          setTimeout(() => {
+            closeRegisterScanner();
+            openProductModal(decodedText);
+          }, 1500);
+        },
+        (errorMessage) => {}
+      );
+      registerScannerActive = true;
+    } catch (err) {
+      console.error("Unable to start scanner:", err);
+      notify("Unable to access camera. Please check permissions.", "error");
+      modal.classList.remove('active');
+    }
+  };
+
+  window.closeRegisterScanner = async function() {
+    if (registerHtml5QrCode && registerScannerActive) {
+      try {
+        await registerHtml5QrCode.stop();
+        registerScannerActive = false;
+      } catch (err) {
+        console.error("Error stopping scanner:", err);
+      }
+    }
+    document.getElementById('registerScannerModal').classList.remove('active');
+    document.getElementById('registerScannerResult').classList.remove('active');
+  };
+
+  document.getElementById('registerScannerModal').addEventListener('click', (e) => {
+    if (e.target.id === 'registerScannerModal') closeRegisterScanner();
+  });
+
+  function openProductModal(barcode) {
+    const modal = document.getElementById('productModal');
+    const barcodeDisplay = document.getElementById('modalBarcodeNumber');
+    const productList = document.getElementById('productList');
+    const confirmBtn = document.getElementById('confirmProductBtn');
+    
+    barcodeDisplay.textContent = barcode;
+    selectedProductId = null;
+    confirmBtn.disabled = true;
+    
+    productList.innerHTML = '';
+    
+    if (inventory.length === 0) {
+      productList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No products available. Add products first.</div>';
+    } else {
+      inventory.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'product-item';
+        itemDiv.dataset.productId = item.id;
+        
+        const totalQty = (item.qtyOld || 0) + (item.qtyNew || 0) + (item.qtyOffice || 0);
+        const barcodeCount = (item.barcodes || []).length;
+        
+        itemDiv.innerHTML = `
+          <div class="product-name">${escapeHtml(item.name)}</div>
+          <div class="product-info">Total Qty: ${totalQty} | Barcodes: ${barcodeCount}</div>
+        `;
+        
+        itemDiv.addEventListener('click', () => selectProduct(item.id));
+        productList.appendChild(itemDiv);
+      });
+    }
+    
+    modal.classList.add('active');
+  }
+
+  function selectProduct(productId) {
+    selectedProductId = productId;
+    document.querySelectorAll('.product-item').forEach(item => {
+      item.classList.remove('selected');
+    });
+    document.querySelector(`[data-product-id="${productId}"]`)?.classList.add('selected');
+    document.getElementById('confirmProductBtn').disabled = false;
+  }
+
+  window.closeProductModal = function() {
+    document.getElementById('productModal').classList.remove('active');
+    selectedProductId = null;
+    scannedBarcode = null;
+  };
+
+  window.confirmProductBarcode = async function() {
+    if (!selectedProductId || !scannedBarcode) {
+      notify('Please select a product', 'warn');
+      return;
+    }
+    
+    try {
+      const product = inventory.find(i => i.id === selectedProductId);
+      const existingBarcodes = product.barcodes || [];
+      
+      // Check if barcode already exists for ANY product
+      const barcodeExists = inventory.some(item => (item.barcodes || []).includes(scannedBarcode));
+      if (barcodeExists) {
+        notify('This barcode is already registered to a product', 'warn');
+        return;
+      }
+      
+      await updateDoc(doc(db, "inventory", selectedProductId), {
+        barcodes: arrayUnion(scannedBarcode)
+      });
+      
+      notify(`Barcode registered to ${product.name}`);
+      closeProductModal();
+      
+    } catch (err) {
+      console.error('Error registering barcode:', err);
+      notify('Failed to register barcode', 'error');
+    }
+  };
+
+  document.getElementById('productModal').addEventListener('click', (e) => {
+    if (e.target.id === 'productModal') closeProductModal();
+  });
+
+  /* ============================================ */
+  /* FUNCTION 2: QUICK SCAN ADD/SUBTRACT STOCK   */
+  /* ============================================ */
+
+  let quickHtml5QrCode = null;
+  let quickScannerActive = false;
+  let quickScannedBarcode = null;
+  let quickProductId = null;
+  let quickQty = 1;
+  let quickAction = 'add'; // 'add' or 'subtract'
+
+  window.openQuickScanner = async function() {
+    const modal = document.getElementById('quickScannerModal');
+    const resultDiv = document.getElementById('quickScannerResult');
+    
+    modal.classList.add('active');
+    resultDiv.classList.remove('active');
+    
+    if (!quickHtml5QrCode) {
+      quickHtml5QrCode = new Html5Qrcode("quickReader");
+    }
+
+    if (quickScannerActive) return;
+
+    try {
+      await quickHtml5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+        (decodedText, decodedResult) => {
+          document.getElementById('quickScannedCode').textContent = decodedText;
+          document.getElementById('quickScannerResult').classList.add('active');
+          quickScannedBarcode = decodedText;
+          
+          // Find product with this barcode
+          const foundProduct = inventory.find(item => (item.barcodes || []).includes(decodedText));
+          
+          if (foundProduct) {
+            notify(`Product found: ${foundProduct.name}`);
+            setTimeout(() => {
+              closeQuickScanner();
+              openQuickActionModal(foundProduct, decodedText);
+            }, 1500);
+          } else {
+            notify('Barcode not registered. Please register it first.', 'warn');
+          }
+        },
+        (errorMessage) => {}
+      );
+      quickScannerActive = true;
+    } catch (err) {
+      console.error("Unable to start quick scanner:", err);
+      notify("Unable to access camera. Please check permissions.", "error");
+      modal.classList.remove('active');
+    }
+  };
+
+  window.closeQuickScanner = async function() {
+    if (quickHtml5QrCode && quickScannerActive) {
+      try {
+        await quickHtml5QrCode.stop();
+        quickScannerActive = false;
+      } catch (err) {
+        console.error("Error stopping quick scanner:", err);
+      }
+    }
+    document.getElementById('quickScannerModal').classList.remove('active');
+    document.getElementById('quickScannerResult').classList.remove('active');
+  };
+
+  document.getElementById('quickScannerModal').addEventListener('click', (e) => {
+    if (e.target.id === 'quickScannerModal') closeQuickScanner();
+  });
+
+  function openQuickActionModal(product, barcode) {
+    quickProductId = product.id;
+    quickQty = 1;
+    quickAction = 'add';
+    
+    document.getElementById('foundProductName').textContent = product.name;
+    document.getElementById('foundBarcode').textContent = barcode;
+    document.getElementById('qtyDisplay').textContent = quickQty;
+    document.getElementById('addBtn').classList.add('active');
+    document.getElementById('subtractBtn').classList.remove('active');
+    document.getElementById('quickActionModal').classList.add('active');
+  }
+
+  window.closeQuickActionModal = function() {
+    document.getElementById('quickActionModal').classList.remove('active');
+    quickProductId = null;
+    quickScannedBarcode = null;
+  };
+
+  window.setAction = function(action) {
+    quickAction = action;
+    if (action === 'add') {
+      document.getElementById('addBtn').classList.add('active');
+      document.getElementById('subtractBtn').classList.remove('active');
+    } else {
+      document.getElementById('addBtn').classList.remove('active');
+      document.getElementById('subtractBtn').classList.add('active');
+    }
+  };
+
+  window.changeQty = function(delta) {
+    quickQty = Math.max(1, quickQty + delta);
+    document.getElementById('qtyDisplay').textContent = quickQty;
+  };
+
+  window.executeQuickAction = async function() {
+    if (!quickProductId) {
+      notify('No product selected', 'error');
+      return;
+    }
+    
+    const location = normLoc(document.getElementById('quickLocation').value);
+    if (!location) {
+      notify('Invalid location', 'warn');
+      return;
+    }
+    
+    try {
+      const product = inventory.find(i => i.id === quickProductId);
+      
+      let qtyOld = product.qtyOld || 0;
+      let qtyNew = product.qtyNew || 0;
+      let qtyOffice = product.qtyOffice || 0;
+      
+      const multiplier = quickAction === 'add' ? 1 : -1;
+      const change = quickQty * multiplier;
+      
+      if (location === 'Old warehouse') {
+        qtyOld = Math.max(0, qtyOld + change);
+      } else if (location === 'New warehouse') {
+        qtyNew = Math.max(0, qtyNew + change);
+      } else if (location === 'Office') {
+        qtyOffice = Math.max(0, qtyOffice + change);
+      }
+      
+      const totalQty = qtyOld + qtyNew + qtyOffice;
+      
+      await updateDoc(doc(db, "inventory", quickProductId), {
+        qtyOld, qtyNew, qtyOffice, qty: totalQty, isNew: true
+      });
+      
+      const actionText = quickAction === 'add' ? 'added to' : 'subtracted from';
+      notify(`${quickQty} ${actionText} ${product.name} at ${location}`);
+      closeQuickActionModal();
+      
+    } catch (err) {
+      console.error('Error executing quick action:', err);
+      notify('Failed to update stock', 'error');
+    }
+  };
+
+  document.getElementById('quickActionModal').addEventListener('click', (e) => {
+    if (e.target.id === 'quickActionModal') closeQuickActionModal();
+  });
+
+  /* ============================================ */
+  /* MANUAL ADD ITEM FUNCTION                    */
+  /* ============================================ */
+
   async function addNewItem() {
     const name = (document.getElementById('newItemName').value || '').trim().replace(/\s+/g,' ');
     const qty  = parseInt(document.getElementById('newItemQty').value,10);
@@ -327,7 +1050,9 @@
         const qtyNew    = location === 'New warehouse' ? qty : 0;
         const qtyOffice = location === 'Office'         ? qty : 0;
         await addDoc(colInventory, {
-          name, qtyOld, qtyNew, qtyOffice, qty: qtyOld + qtyNew + qtyOffice, goal:0, img:null, isNew:true, createdAt: serverTimestamp()
+          name, qtyOld, qtyNew, qtyOffice, qty: qtyOld + qtyNew + qtyOffice, goal:0, img:null, isNew:true, 
+          barcodes: [], // Initialize empty barcodes array
+          createdAt: serverTimestamp()
         });
       }
       notify(`Item "${name}" added to ${location}.`);
@@ -335,7 +1060,9 @@
     document.getElementById('newItemName').value = '';
     document.getElementById('newItemQty').value = '';
   }
+  
   window.addNewItem = addNewItem;
+  window.selectProduct = selectProduct;
 </script>
 </body>
 </html>
